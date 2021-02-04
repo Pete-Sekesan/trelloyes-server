@@ -66,6 +66,19 @@ app.get("/list", (req, res) => {
   res.json(lists);
 });
 
+app.get("/card/:id", (req, res) => {
+  const { id } = req.params;
+  const card = cards.find((c) => c.id == id);
+
+  // make sure we found a card
+  if (!card) {
+    logger.error(`Card with id ${id} not found.`);
+    return res.status(404).send("Card Not Found");
+  }
+
+  res.json(card);
+});
+
 app.use(function errorHandler(error, req, res, next) {
   let response;
   if (NODE_ENV === "production") {
