@@ -58,6 +58,14 @@ app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
 
+app.get("/card", (req, res) => {
+  res.json(cards);
+});
+
+app.get("/list", (req, res) => {
+  res.json(lists);
+});
+
 app.use(function errorHandler(error, req, res, next) {
   let response;
   if (NODE_ENV === "production") {
