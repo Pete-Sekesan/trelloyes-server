@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
 const winston = require("winston");
+const { v4: uuid } = require("uuid");
 
 const app = express();
 
@@ -42,6 +43,7 @@ const morganOption = NODE_ENV === "production" ? "tiny" : "common";
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
+app.use(express.json());
 
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;
@@ -77,6 +79,38 @@ app.get("/card/:id", (req, res) => {
   }
 
   res.json(card);
+});
+
+app.post("/card", (req, res) => {
+  // Get the data from the body:
+  const { title, content } = req.body;
+
+  //validate that both title and content exist.
+  if (!title) {
+    logger.error(`Title is required`);
+    return res.status(400).send("Invalid data");
+  }
+
+  if (!content) {
+    logger.error(`Content is required`);
+    return res.status(400).send("Invalid data");
+  }
+
+  // get an id
+  const id = uuid();
+
+  const card = {
+    id,
+    title,
+    content,
+  };
+
+  cards.push(card);
+
+  // log the card creation and send a response including a location header.
+  logger.info(`Card with id ${id} created`);
+
+  res.status(201).location(`http://localhost:8000/card/${id}`).json(card);
 });
 
 app.use(function errorHandler(error, req, res, next) {
