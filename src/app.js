@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
 const winston = require("winston");
 const { v4: uuid } = require("uuid");
+const cardRouter = express.Router();
 
 const app = express();
 
@@ -59,6 +60,26 @@ app.use(function validateBearerToken(req, res, next) {
 app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
+
+//create card route
+
+cardRouter
+  .route("/card")
+  .get((req, res) => {
+    /* code not shown */
+  })
+  .post((req, res) => {
+    /* code not shown */
+  });
+
+cardRouter
+  .route("/card/:id")
+  .get((req, res) => {
+    /* code not shown */
+  })
+  .delete((req, res) => {
+    /* code not shown */
+  });
 
 app.get("/card", (req, res) => {
   res.json(cards);
